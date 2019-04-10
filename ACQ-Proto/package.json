@@ -1,0 +1,13 @@
+{
+  "name": "poe-parse-base",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpingx/ACQ-Proto.git"
+  },
+  "author": "rpingx",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpingx/ACQ-Proto/issues"
+  }
+}
