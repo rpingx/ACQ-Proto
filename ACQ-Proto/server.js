@@ -11,7 +11,7 @@ const workspaceConnector = require('./workspaceConnector.js');
 var app = express();
 app.use(cors());
 
-//app.use(express.static('../UI/dist'));
+app.use(express.static('./UI/dist'));
 
 app.get('/', function (req, res) {
     res.send('ACQ Proto online.');

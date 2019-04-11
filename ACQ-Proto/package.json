@@ -2,14 +2,11 @@
   "name": "ACQ-Proto-base",
   "version": "1.0.0",
   "dependencies": {
-    "async": "2.6.1",
-    "cors": "2.8.4",
+    "async": "2.6.2",
+    "cors": "2.8.5",
     "express": "4.16.4",
-    "jsonfile": "4.0.0",
-    "moment": "2.22.2",
     "nedb-core": "3.0.6",
-    "npm": "6.9.0",
-    "request": "2.87.0"
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "node server.js"
