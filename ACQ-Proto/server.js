@@ -3,7 +3,6 @@
  */
 const fs = require('fs');
 const express = require('express');
-const moment = require('moment');
 const cors = require('cors');
 const nasdaqConnector = require('./nasdaqConnector.js');
 const workspaceConnector = require('./workspaceConnector.js');

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ACQ-Proto/ACQ-Proto.iml" filepath="$PROJECT_DIR$/ACQ-Proto/ACQ-Proto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ACQ-Proto/UI/UI.iml" filepath="$PROJECT_DIR$/ACQ-Proto/UI/UI.iml" />
     </modules>
   </component>
 </project>
