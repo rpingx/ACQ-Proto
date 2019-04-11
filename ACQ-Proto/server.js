@@ -31,8 +31,8 @@ app.get('/api/nasdaq/query', (req, res) => {
             nasdaqConnector.getByID(req.query.id)
                 .then(result => res.send(result))
                 .catch(error => res.status(500).send("id not valid"));
-        } else if (req.query.industry || req.query.sector || req.query.text) {
-            nasdaqConnector.getByOthers(req.query.industry, req.query.sector, req.query.text)
+        } else if (req.query.filter) {
+            nasdaqConnector.getByOthers(req.query.filter)
                 .then(result => res.send(result))
                 .catch(error => res.status(500).send(error));
         } else {

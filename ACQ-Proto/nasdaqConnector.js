@@ -60,19 +60,43 @@ nasdaqDB.count({}, (err, count) => {
     }
 });
 
-const queryByOthers = (industry, sector, text) => {
+const queryByOthers = (filterObj) => {
+    filterObj = JSON.parse(filterObj);
     let filter = {$and: []};
-    if (industry) {
-        filter.$and.push({Industry: industry});
-    }
-    if (sector) {
-        filter.$and.push({Sector: sector});
+
+    if (filterObj.industry) {
+        filter.$and.push({Industry: filterObj.industry});
     }
 
-    if (text) {
-        filter.$and.push({$or: [{Symbol: new RegExp(text)}, {Name: new RegExp(text)}]});
+    if (filterObj.sector) {
+        filter.$and.push({Sector: filterObj.sector});
     }
-    console.log(JSON.stringify(filter));
+
+    if (filterObj.text) {
+        filter.$and.push({$or: [{Symbol: new RegExp(filterObj.text, 'i')}, {Name: new RegExp(filterObj.text, 'i')}]});
+    }
+
+    if (filterObj.ipoYearMin) {
+        filter.$and.push({IPOYear: {$gte: filterObj.ipoYearMin}});
+    }
+    if (filterObj.ipoYearMax) {
+        filter.$and.push({IPOYear: {$lte: filterObj.ipoYearMax}});
+    }
+
+    if (filterObj.marketCapMin) {
+        filter.$and.push({MarketCap: {$gte: filterObj.marketCapMin}});
+    }
+    if (filterObj.marketCapMax) {
+        filter.$and.push({MarketCap: {$lte: filterObj.marketCapMax}});
+    }
+
+    if (filterObj.priceMin) {
+        filter.$and.push({Price: {$gte: filterObj.priceMin}});
+    }
+    if (filterObj.priceMax) {
+        filter.$and.push({Price: {$lte: filterObj.priceMax}});
+    }
+
     return new Promise((resolve, reject) => {
         nasdaqDB.find(filter, function (err, docs) {
             if (err) {
