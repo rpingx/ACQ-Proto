@@ -2,7 +2,7 @@
  * Created by rxudsk on 4/11/2019.
  */
 
-const Dstore = require('nedb');
+const Dstore = require('nedb-core');
 
 var nasdaqDB = new Dstore({filename: './datastore/nasdaq.db', autoload: true});
 
