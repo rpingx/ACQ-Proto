@@ -91,3 +91,6 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/windows,intellij
 
 node_modules/
+
+# Project specific datastore
+datastore/
