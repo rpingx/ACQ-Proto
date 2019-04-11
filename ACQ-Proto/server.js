@@ -5,8 +5,8 @@ const fs = require('fs');
 const express = require('express');
 const moment = require('moment');
 const cors = require('cors');
-
 const nasdaqConnector = require('./nasdaqConnector.js');
+const workspaceConnector = require('./workspaceConnector.js');
 
 var app = express();
 app.use(cors());
@@ -59,7 +59,16 @@ app.get('/api/nasdaq/distinctIndustry', (req, res) => {
     }
 });
 
-app.listen(80);
+app.get('/api/workspace/items', (req, res) => {
+    try {
+        workspaceConnector.getAllItems()
+            .then(result => res.send(result))
+            .catch(error => res.status(500).send(error));
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
 
+app.listen(80);
 
 console.log("Listening on 80.");
