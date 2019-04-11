@@ -32,9 +32,27 @@ const parseMarketCap = (origCap) => {
     return parseFloat(floatCap.toFixed(2));
 };
 
+const compareExcludingNA = (a, b) => {
+    if (a === 'n/a') {
+        return 1;
+    }
+
+    if (b === 'n/a') {
+        return -1;
+    }
+    return a.localeCompare(b);
+};
+
 var nasdaqLoaded = false;
+var distinctSector = [];
+var distinctIndustry = [];
 nasdaqDB.count({}, (err, count) => {
+    let insertCount = 0;
+    let sectorAccum = {};
+    let industryAccum = {};
     if (count === 0) {
+        let accumDone = false;
+        let insertDone = false;
         console.log("NasdaqDB is empty.");
         let nasdaqData = require('./dummy_data/nasdaq_data.json');
 
@@ -45,18 +63,52 @@ nasdaqDB.count({}, (err, count) => {
             datum.Industry = datum.Industry.trim();
             datum.MarketCap = parseMarketCap(datum.MarketCap);
 
+            sectorAccum[datum.Sector] = null;
+            industryAccum[datum.Industry] = null;
+
             nasdaqDB.insert(datum, (err, newDatum) => {
                 if (err) {
                     console.log(err);
                     console.log(JSON.stringify(newDatum, null, 4));
                 }
+
+                if (++insertCount === nasdaqData.length) {
+                    console.log("NasdaqDB has been populated.");
+                    insertDone = true;
+                    nasdaqLoaded = accumDone && insertDone;
+                    if (nasdaqLoaded) console.log("Setup complete.");
+                }
             });
         });
-        console.log("NasdaqDB has been populated.");
-        nasdaqLoaded = true;
+
+        distinctSector = Object.keys(sectorAccum)
+            .sort(compareExcludingNA);
+        distinctIndustry = Object.keys(industryAccum)
+            .sort(compareExcludingNA);
+
+        accumDone = true;
+        nasdaqLoaded = accumDone && insertDone;
+        if (nasdaqLoaded) console.log("Setup complete.");
     } else {
         console.log("NasdaqDB is not empty.");
-        nasdaqLoaded = true;
+        nasdaqDB.find({}, function (err, docs) {
+            if (err) {
+                console.log(err);
+            }
+
+            docs.forEach((datum) => {
+                sectorAccum[datum.Sector] = null;
+                industryAccum[datum.Industry] = null;
+            });
+
+            distinctSector = Object.keys(sectorAccum)
+                .sort(compareExcludingNA);
+            distinctIndustry = Object.keys(industryAccum)
+                .sort(compareExcludingNA);
+
+            nasdaqLoaded = true;
+            console.log("Setup complete.");
+        });
     }
 });
 
@@ -111,6 +163,12 @@ const queryByOthers = (filterObj) => {
 const nas_base = {
     getLoadStatus: () => {
         return nasdaqLoaded;
+    },
+    getDistinctSector: () => {
+        return distinctSector;
+    },
+    getDistinctIndustry: () => {
+        return distinctIndustry;
     },
     getByID: (id) => {
         return new Promise((resolve, reject) => {

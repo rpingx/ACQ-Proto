@@ -43,6 +43,21 @@ app.get('/api/nasdaq/query', (req, res) => {
     }
 });
 
+app.get('/api/nasdaq/distinctSector', (req, res) => {
+    try {
+        res.send(nasdaqConnector.getDistinctSector());
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
+
+app.get('/api/nasdaq/distinctIndustry', (req, res) => {
+    try {
+        res.send(nasdaqConnector.getDistinctIndustry());
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
 
 app.listen(80);
 
