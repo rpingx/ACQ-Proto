@@ -4,7 +4,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "dev": "webpack-dev-server --progress --open --hot --env.apiurl=http://localhost/api/",
-    "prod": "webpack --progress --hide-modules --env.apiurl=http://localhost/api/"
+    "prod": "webpack --progress --hide-modules --env.apiurl=./api/"
   },
   "dependencies": {
     "axios": "0.18.0",
