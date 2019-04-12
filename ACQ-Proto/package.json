@@ -9,6 +9,7 @@
     "npm": "6.9.0"
   },
   "scripts": {
+    "complete": "npm install && cd UI && npm install && npm run prod && cd .. && npm start",
     "start": "node server.js"
   },
   "main": "server.js",
