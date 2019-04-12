@@ -58,6 +58,27 @@ app.get('/api/nasdaq/distinctIndustry', (req, res) => {
     }
 });
 
+app.get('/api/nasdaq/queryFirstN', (req, res) => {
+    try {
+        if (req.query.limit) {
+            nasdaqConnector.getFirstN(req.query.limit)
+                .then(result => res.send(result))
+                .catch(error => res.status(500).send(error));
+        } else {
+            nasdaqConnector.getFirstN(0)
+                .then(result => res.send(result))
+                .catch(error => res.status(500).send(error));
+        }
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
+
+//workspaceConnector.empty().then((res)=> {
+//    workspaceConnector.insertItems([{test: "L", quack: "DUCK"},{cros: "ANT", quack: "goose?"}]);
+//});
+
+
 app.get('/api/workspace/items', (req, res) => {
     try {
         workspaceConnector.getAllItems()
