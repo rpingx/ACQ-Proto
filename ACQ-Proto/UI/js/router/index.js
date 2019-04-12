@@ -3,34 +3,42 @@
  */
 import Vue from 'vue';
 
-import RecipeInput from '../recipeInput.vue';
-import RecipeDisplay from '../recipeDisplay.vue';
-import Home from '../home.vue';
+import home from '../home.vue';
+import mock from '../mock.vue';
+import acq from '../acquisition.vue';
+import about from '../about.vue';
+
 
 import Router from 'vue-router';
 
 const routerMapping = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/RecipeInput',
-    name: 'Recipe Input',
-    component: RecipeInput,
-    desc: "Input interesting recipes."
-  },
-  {
-    path: '/RecipeDisplay',
-    name: 'Recipe Display',
-    component: RecipeDisplay,
-    desc: "Display interesting recipes."
-  }
+    {
+        path: '/',
+        name: 'Home',
+        component: home
+    },
+    {
+        path: '/workspace',
+        name: 'Acquisition Workspace',
+        component: acq,
+        desc: "Workspace where coding challenge goals will be met."
+    },
+    {
+        path: '/mockData',
+        name: 'Mock Data',
+        component: mock,
+        desc: "Mocks up data for easier testing and presentation."
+    },
+    {
+        path: '/about',
+        name: 'About',
+        component: about,
+        desc: "Comments from dev about the app."
+    }
 ];
 
 Vue.use(Router);
 
 export default new Router({
-  routes: routerMapping
+    routes: routerMapping
 });
