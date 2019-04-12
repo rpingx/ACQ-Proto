@@ -91,7 +91,7 @@ nasdaqDB.count({}, (err, count) => {
         if (nasdaqLoaded) console.log("Setup complete.");
     } else {
         console.log("NasdaqDB is not empty.");
-        nasdaqDB.find({}, function (err, docs) {
+        nasdaqDB.find({}, (err, docs)=> {
             if (err) {
                 console.log(err);
             }
@@ -150,13 +150,29 @@ const queryByOthers = (filterObj) => {
     }
 
     return new Promise((resolve, reject) => {
-        nasdaqDB.find(filter, function (err, docs) {
+        nasdaqDB.find(filter, (err, docs) => {
             if (err) {
                 reject(err);
             }
 
             resolve(docs);
         });
+    });
+};
+
+const getFirstN = (limit) => {
+    return new Promise((resolve, reject) => {
+        nasdaqDB
+            .find({})
+            .sort({Name: 1})
+            .limit(limit)
+            .exec((err, docs) => {
+                if (err) {
+                    reject(err);
+                }
+
+                resolve(docs);
+            });
     });
 };
 
@@ -172,7 +188,7 @@ const nas_base = {
     },
     getByID: (id) => {
         return new Promise((resolve, reject) => {
-            nasdaqDB.find({"_id": id}, function (err, docs) {
+            nasdaqDB.find({"_id": id}, (err, docs) => {
                 if (err) {
                     console.log(err);
                 }
@@ -184,7 +200,8 @@ const nas_base = {
             });
         });
     },
-    getByOthers: queryByOthers
+    getByOthers: queryByOthers,
+    getFirstN: getFirstN
 };
 
 module.exports = nas_base;
