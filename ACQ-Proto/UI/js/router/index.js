@@ -6,7 +6,7 @@ import Vue from 'vue';
 import home from '../home.vue';
 import mock from '../mock.vue';
 import acq from '../acquisition.vue';
-import about from '../about.vue';
+import notes from '../notes.vue';
 
 
 import Router from 'vue-router';
@@ -30,9 +30,9 @@ const routerMapping = [
         desc: "Mocks up data for easier testing and presentation."
     },
     {
-        path: '/about',
-        name: 'About',
-        component: about,
+        path: '/notes',
+        name: 'Notes',
+        component: notes,
         desc: "Comments from dev about the app."
     }
 ];

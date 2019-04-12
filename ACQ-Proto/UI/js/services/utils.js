@@ -61,6 +61,14 @@ export default {
 
 
     //others
+    stringify: function (obj) {
+        var esc = encodeURIComponent;
+        return Object.keys(obj)
+            .map(function (k) {
+                return esc(k) + '=' + esc(obj[k]);
+            })
+            .join('&');
+    },
     getDebouncer: function (defDelay) {
         var defaultDelay = defDelay === undefined ? 300 : defDelay;
         var timeoutID = {};

@@ -36,9 +36,26 @@ const insertDocs = (docs) => {
     });
 };
 
+const deleteAllDocs = () => {
+    return new Promise((resolve, reject) => {
+        workspaceDB.remove({}, {multi: true}, (err, numRemoved) => {
+            if (err) {
+                reject(err);
+            }
+
+            workspaceDB.loadDatabase(function (error) {
+                if (error) {
+                    reject(error);
+                }
+                resolve(numRemoved);
+            });
+        });
+    });
+};
 const work_base = {
     getAllItems: getAllWorkSpaceDocs,
-    insertItems: insertDocs
+    insertItems: insertDocs,
+    empty: deleteAllDocs
 };
 
 module.exports = work_base;

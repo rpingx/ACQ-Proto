@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#" title="Acquisition Comparison Queue">ACQ</a>
+        <a class="navbar-brand" @click="activePath = '/'" href="/#/" title="Acquisition Comparison Queue">ACQ</a>
         <button class="navbar-toggler" type="button" @click="toggleBurger();" ref="burger">
             <span class="navbar-toggler-icon"></span>
         </button>

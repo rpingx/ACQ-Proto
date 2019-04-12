@@ -1,24 +1,17 @@
 <template>
-    <div>
-        <wrapper>
-            <legend>Home</legend>
-
-            <p v-for="app in activeApps">
-                <router-link :to="app.path">{{app.name}}</router-link>
-                : {{app.desc}}
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-3">Home</h1>
+            <p class="lead" v-for="app in activeApps">
+                <router-link :to="app.path">{{app.name}}</router-link>: {{app.desc}}
             </p>
-        </wrapper>
+        </div>
     </div>
 </template>
 
 <script>
-    import wrapper from './components/formWrapper.vue';
-
     export default {
         props: [],
-        components: {
-            wrapper
-        },
         computed: {
             activeApps: function () {
                 var holderArr = [];
