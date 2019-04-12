@@ -27,7 +27,7 @@ app.get('/api/nasdaq/ready', (req, res) => {
 app.get('/api/nasdaq/query', (req, res) => {
     try {
         if (req.query.id) {
-            nasdaqConnector.getByID(req.query.id)
+            nasdaqConnector.getWorkItemById(req.query.id)
                 .then(result => res.send(result))
                 .catch(error => res.status(500).send("id not valid"));
         } else if (req.query.filter) {

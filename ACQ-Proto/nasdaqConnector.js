@@ -112,6 +112,27 @@ nasdaqDB.count({}, (err, count) => {
     }
 });
 
+const getWorkItemById = (id) => {
+    return new Promise((resolve, reject) => {
+        nasdaqDB.find({"_id": id}, (err, docs) => {
+            if (err) {
+                console.log(err);
+            }
+
+            if (docs.length === 1) {
+                let workItem = docs[0];
+                delete workItem._id;
+                workItem.Status = 0;
+                workItem.KeyContacts = [
+                    {name: "Person McPerson", contact: "123-45-7890"},
+                    {name: "Real O'Person", contact: "roper@corp.com"}
+                ];
+                resolve(workItem);
+            }
+            reject(null);
+        });
+    });
+};
 const queryByOthers = (filterObj) => {
     filterObj = JSON.parse(filterObj);
     let filter = {$and: []};
@@ -186,20 +207,7 @@ const nas_base = {
     getDistinctIndustry: () => {
         return distinctIndustry;
     },
-    getByID: (id) => {
-        return new Promise((resolve, reject) => {
-            nasdaqDB.find({"_id": id}, (err, docs) => {
-                if (err) {
-                    console.log(err);
-                }
-
-                if (docs.length === 1) {
-                    resolve(docs[0]);
-                }
-                reject(null);
-            });
-        });
-    },
+    getWorkItemById: getWorkItemById,
     getByOthers: queryByOthers,
     getFirstN: getFirstN
 };
