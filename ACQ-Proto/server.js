@@ -8,6 +8,10 @@ const nasdaqConnector = require('./nasdaqConnector.js');
 const workspaceConnector = require('./workspaceConnector.js');
 
 var app = express();
+
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
+
 app.use(cors());
 
 app.use(express.static('./UI/dist'));
@@ -77,7 +81,31 @@ app.get('/api/nasdaq/queryFirstN', (req, res) => {
 //workspaceConnector.empty().then((res)=> {
 //    workspaceConnector.insertItems([{test: "L", quack: "DUCK"},{cros: "ANT", quack: "goose?"}]);
 //});
+//workspaceConnector.updateById("u8f9iAbRNLt27Mug", {"temple": "os", "quack": "look", "_id": "u8f9iAbRNLt27Mug"});
 
+//workspaceConnector.deleteById('Js9GzVYepWqRLxeQ');
+
+app.post('/api/mock/load', (req, res) => {
+    try {
+        workspaceConnector.empty().then(()=> {
+            nasdaqConnector.getFirstN(req.body.count)
+                .then((result) => {
+                    result.forEach((obj) => {
+                        let id = obj._id;
+                        nasdaqConnector.getWorkItemById(id)
+                            .then((result2)=> {
+                                workspaceConnector.insertItems(result2)
+                            });
+                    });
+
+                    res.send("Complete");
+                })
+                .catch(error => res.status(500).send(error));
+        });
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
 
 app.get('/api/workspace/items', (req, res) => {
     try {
