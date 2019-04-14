@@ -25,7 +25,6 @@
 </template>
 
 <script>
-    import nasdaqResources from "./services/nasdaq";
     import mockResources from "./services/mock";
 
     export default {
@@ -33,31 +32,6 @@
             return {
                 branch: null
             }
-        },
-        mounted: function () {
-            this.$nextTick(function () {
-//                nasdaqResources.getDistinctIndustry()
-//                        .then(function (result) {
-//                            console.log(result);
-//                        });
-//                nasdaqResources.isReady()
-//                        .then(function (result) {
-//                            console.log(result===true);
-//                        });
-//                nasdaqResources.getItems(null, {industry: "Major Pharmaceuticals"})
-//                        .then(function (result) {
-//                            console.log(result);
-//                        });
-//                nasdaqResources.getItems('01QnkPNbKXJf8q9j')
-//                        .then(function (result) {
-//                            console.log(result);
-//                        });
-
-//                mockResources.mockLoad(14)
-//                        .then(function (result) {
-//                            console.log(result);
-//                        });
-            })
         },
         methods: {
             mockLoad: function (limit) {

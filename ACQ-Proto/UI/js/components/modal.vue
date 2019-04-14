@@ -1,20 +1,23 @@
 <template>
     <div :style="styleObj">
-        <div class="modal-dialog" style="position: fixed;top: 30%;left: 50%;transform: translate(-50%, -50%);">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" style="color: #222222;" aria-hidden="true"
-                            @click="close">&times;</button>
-                    <h4 class="modal-title">
+                    <h5 class="modal-title">
                         <slot name="title">Alert</slot>
-                    </h4>
+                    </h5>
+                    <button type="button" class="close" @click="close">
+                        <span>&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <slot name="body"></slot>
+                    <div>
+                        <slot name="body"></slot>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <slot name="footer">
-                        <button type="button" class="btn btn-default" @click="close" autofocus>Close</button>
+                        <button type="button" class="btn btn-outline-secondary" @click="close" autofocus>Close</button>
                     </slot>
                 </div>
             </div>
