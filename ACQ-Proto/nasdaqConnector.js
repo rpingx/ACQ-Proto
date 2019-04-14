@@ -171,13 +171,15 @@ const queryByOthers = (filterObj) => {
     }
 
     return new Promise((resolve, reject) => {
-        nasdaqDB.find(filter, (err, docs) => {
-            if (err) {
-                reject(err);
-            }
+        nasdaqDB.find(filter)
+            .sort({Name: 1})
+            .exec((err, docs) => {
+                if (err) {
+                    reject(err);
+                }
 
-            resolve(docs);
-        });
+                resolve(docs);
+            });
     });
 };
 
