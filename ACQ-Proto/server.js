@@ -83,15 +83,24 @@ app.post('/api/mock/load', (req, res) => {
         workspaceConnector.empty().then(()=> {
             nasdaqConnector.getFirstN(req.body.count)
                 .then((result) => {
+                    if (result.length === 0) {
+                        res.send("Complete");
+                    }
+
+                    let counter = 0;
+
                     result.forEach((obj) => {
                         let id = obj._id;
                         nasdaqConnector.getWorkItemById(id)
                             .then((result2)=> {
                                 workspaceConnector.insertItems(result2)
+                                    .then(()=> {
+                                        if (++counter === result.length) {
+                                            res.send("Complete");
+                                        }
+                                    });
                             });
                     });
-
-                    res.send("Complete");
                 })
                 .catch(error => res.status(500).send(error));
         });
