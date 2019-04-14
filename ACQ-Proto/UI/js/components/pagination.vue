@@ -38,6 +38,9 @@
                 return false;
             },
             isRightDisabled: function () {
+                if (this.count === 0) {
+                    return true;
+                }
                 if (this.value && this.value.max) {
                     return this.value.max === (this.count - 1);
                 }
@@ -53,6 +56,19 @@
         watch: {
             'value.min': function () {
                 this.$emit('input', this.value);
+            },
+            'count': function () {
+                if (this.value.min >= this.count) {
+                    this.value.min = this.count - 1;
+                }
+
+                this.value.min -= this.value.min % this.countPer;
+
+                this.value.max = Number(this.value.min) + Number(this.countPer) - 1;
+
+                if (this.value.max >= this.count) {
+                    this.value.max = this.count - 1;
+                }
             }
         },
         mounted: function () {
@@ -99,16 +115,18 @@
 
             },
             shiftRight: function () {
-                var tempObj = {min: null, max: null};
-                tempObj.min = Number(this.value.min) + Number(this.countPer);
+                if (this.count) {
+                    var tempObj = {min: null, max: null};
+                    tempObj.min = Number(this.value.min) + Number(this.countPer);
 
-                tempObj.max = Number(tempObj.min) + Number(this.countPer) - 1;
+                    tempObj.max = Number(tempObj.min) + Number(this.countPer) - 1;
 
-                if (tempObj.max >= this.count) {
-                    tempObj.max = this.count - 1;
+                    if (tempObj.max >= this.count) {
+                        tempObj.max = this.count - 1;
+                    }
+
+                    this.value = tempObj;
                 }
-
-                this.value = tempObj;
             }
         }
     };
