@@ -93,6 +93,28 @@ app.post('/api/mock/load', (req, res) => {
                         let id = obj._id;
                         nasdaqConnector.getWorkItemById(id)
                             .then((result2)=> {
+
+                                try {
+                                    result2.Price = Number(result2.Price);
+                                } catch (e) {
+                                    console.log("updateById Price error: " + e);
+                                    result2.Price = null;
+                                }
+
+                                try {
+                                    result2.MarketCap = Number(result2.MarketCap);
+                                } catch (e) {
+                                    console.log("updateById MarketCap error: " + e);
+                                    result2.MarketCap = null;
+                                }
+
+                                try {
+                                    result2.IPOYear = Number(result2.IPOYear);
+                                } catch (e) {
+                                    console.log("updateById IPOYear error: " + e);
+                                    result2.IPOYear = null;
+                                }
+
                                 workspaceConnector.insertItems(result2)
                                     .then(()=> {
                                         if (++counter === result.length) {

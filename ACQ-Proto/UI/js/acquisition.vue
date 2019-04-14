@@ -3,24 +3,31 @@
         <div class="jumbotron">
             <h1 class="display-3">Acquisition Workspace</h1>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     <div class="form-group">
                         <label class="control-label">View mode:</label>
                         <div class="form-group">
                             <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button @click.prevent="viewMode = 'tile'"
-                                            :class="[viewMode === 'tile' ? 'btn-primary' : 'btn-outline-primary', 'btn']">
-                                        Tile
-                                    </button>
-                                </div>
-                                <div class="input-group-append">
-                                    <button @click.prevent="viewMode = 'row'"
-                                            :class="[viewMode === 'row' ? 'btn-primary' : 'btn-outline-primary', 'btn']">
-                                        Row
-                                    </button>
-                                </div>
+                                <button @click.prevent="viewMode = 'tile'"
+                                        :class="[viewMode === 'tile' ? 'btn-primary' : 'btn-outline-primary', 'btn']">
+                                    Tile
+                                </button>
+                                <button @click.prevent="viewMode = 'row'"
+                                        :class="[viewMode === 'row' ? 'btn-primary' : 'btn-outline-primary', 'btn']">
+                                    Row
+                                </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <label class="control-label">Add work items:</label>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info">From NASDAQ</button>
+                            <button @click="addBlankWorkItem" type="button" class="btn btn-outline-info">From Blank
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -32,14 +39,14 @@
             </div>
         </div>
 
-        <modal v-if="isNasdaqVisible" :close="closeNasdaq">
+        <modal v-show="isNasdaqVisible" :close="closeNasdaq">
             <span slot="title">NASDAQ Query</span>
             <p slot="body">
                 Query goes here
             </p>
         </modal>
 
-        <modal v-if="isWorkItemVisible" :close="closeWorkItem">
+        <modal v-show="isWorkItemVisible" :close="closeWorkItem">
             <span slot="title">Work Item Details</span>
             <form slot="body">
                 <fieldset class="container">
@@ -156,9 +163,26 @@
                 </fieldset>
             </form>
             <span slot="footer">
-                <button type="button" class="btn btn-success" @click="updateWorkItem" v-if="modalWorkItem._id">Update</button>
-                <button type="button" class="btn btn-warning" @click="updateWorkItem" v-if="modalWorkItem._id">Delete</button>
-                <button type="button" class="btn btn-outline-secondary" @click="closeWorkItem">Close</button>
+                <button type="button" class="btn btn-success" @click="addWorkItem" v-show="!(modalWorkItem._id)">Add
+                </button>
+                <span v-show="!deleteWorkItemConfirmVisible && modalWorkItem._id">
+                    <button type="button" class="btn btn-success" @click="updateWorkItem">
+                        Update
+                    </button>
+                    <button type="button" class="btn btn-warning" @click="deleteWorkItemConfirmVisible=true">
+                        Delete
+                    </button>
+                </span>
+                <span v-show="deleteWorkItemConfirmVisible && modalWorkItem._id">
+                    Confirm removal?
+                    <button type="button" class="btn btn-success" @click="deleteWorkItem">
+                        Yes
+                    </button>
+                    <button type="button" class="btn btn-danger" @click="deleteWorkItemConfirmVisible=false">
+                        No
+                    </button>
+                </span>
+            <button type="button" class="btn btn-outline-secondary" @click="closeWorkItem">Close</button>
             </span>
         </modal>
     </div>
@@ -183,30 +207,27 @@
             return {
                 viewMode: "tile",
                 isNasdaqVisible: false,
-                isWorkItemVisible: true,
+                isWorkItemVisible: false,
                 statusOpt: statusService.getOptions(),
                 modalWorkItem: {
-                    "Symbol": "TWOU",
-                    "Name": "2U, Inc.",
-                    "Price": 66.22,
-                    "MarketCap": 3870,
-                    "IPOYear": 2014,
-                    "Sector": "Technology",
-                    "Industry": "Computer Software: Prepackaged Software",
-                    "SummaryQuote": "https://www.nasdaq.com/symbol/twou",
+                    "Symbol": "",
+                    "Name": "",
+                    "Price": null,
+                    "MarketCap": null,
+                    "IPOYear": null,
+                    "Sector": "",
+                    "Industry": "",
                     "Status": "0",
                     "KeyContacts": [
                         {
-                            "name": "Person McPerson",
-                            "contact": "123-45-7890"
-                        }, {
-                            "name": "Real O'Person",
-                            "contact": "roper@corp.com"
-                        }],
-                    "_id": "AxjLTLAsAETYiYTh"
+                            "name": "",
+                            "contact": ""
+                        }
+                    ]
                 },
                 modalPersonConfirmVisible: [],
-                personPaginationIndex: {},
+                deleteWorkItemConfirmVisible: false,
+                personPaginationIndex: {min: 0, max: 0},
                 rawDataArr: []
             }
         },
@@ -233,26 +254,57 @@
                 workspaceResources.getAllItems()
                         .then(function (res) {
                             self.rawDataArr = res;
+                            console.log(self.rawDataArr.length);
                         });
+            },
+            addBlankWorkItem: function () {
+                this.setWorkItemModal(
+                        {
+                            "Symbol": "",
+                            "Name": "",
+                            "Price": null,
+                            "MarketCap": null,
+                            "IPOYear": null,
+                            "Sector": "",
+                            "Industry": "",
+                            "Status": "0",
+                            "KeyContacts": [
+                                {
+                                    "name": "",
+                                    "contact": ""
+                                }
+                            ]
+                        }
+                );
             },
             setWorkItemModal: function (obj) {
                 this.modalWorkItem = obj;
                 this.isWorkItemVisible = true;
-                this.personPaginationIndex = {};
+                this.personPaginationIndex = {min: 0, max: 0};
+                this.modalPersonConfirmVisible = [];
+                this.deleteWorkItemConfirmVisible = false;
             },
             closeNasdaq: function () {
                 this.isNasdaqVisible = false;
             },
             closeWorkItem: function () {
                 this.isWorkItemVisible = false;
+                this.getAllItems();
+            },
+            addWorkItem: function () {
+                workspaceResources.addItem(this.modalWorkItem)
+                        .then(this.closeWorkItem);
             },
             updateWorkItem: function () {
-                console.log(JSON.stringify(this.modalWorkItem, null, 4));
+                workspaceResources.updateById(this.modalWorkItem._id, this.modalWorkItem)
+                        .then(this.closeWorkItem);
             },
             deleteWorkItem: function () {
-                console.log(JSON.stringify(this.modalWorkItem, null, 4));
+                workspaceResources.deleteById(this.modalWorkItem._id)
+                        .then(this.closeWorkItem);
             },
             addModalPerson: function () {
+                console.log(JSON.stringify(this.modalWorkItem.KeyContacts));
                 this.modalWorkItem.KeyContacts.push(
                         {
                             "name": "",
