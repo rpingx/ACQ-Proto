@@ -78,13 +78,6 @@ app.get('/api/nasdaq/queryFirstN', (req, res) => {
     }
 });
 
-//workspaceConnector.empty().then((res)=> {
-//    workspaceConnector.insertItems([{test: "L", quack: "DUCK"},{cros: "ANT", quack: "goose?"}]);
-//});
-//workspaceConnector.updateById("u8f9iAbRNLt27Mug", {"temple": "os", "quack": "look", "_id": "u8f9iAbRNLt27Mug"});
-
-//workspaceConnector.deleteById('Js9GzVYepWqRLxeQ');
-
 app.post('/api/mock/load', (req, res) => {
     try {
         workspaceConnector.empty().then(()=> {
@@ -111,6 +104,43 @@ app.get('/api/workspace/items', (req, res) => {
     try {
         workspaceConnector.getAllItems()
             .then(result => res.send(result))
+            .catch(error => res.status(500).send(error));
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
+
+app.post('/api/workspace/items/add', (req, res) => {
+    try {
+        workspaceConnector.insertItems(JSON.parse(req.body.item))
+            .then((result) => {
+                res.send(result);
+            })
+            .catch(error => res.status(500).send(error));
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
+
+//Pretty sure these two should be puts... might fix it later.
+app.post('/api/workspace/items/delete', (req, res) => {
+    try {
+        workspaceConnector.deleteById(req.body.id)
+            .then((result) => {
+                res.send(result + " removed");
+            })
+            .catch(error => res.status(500).send(error));
+    } catch (err) {
+        res.send("Error: " + err);
+    }
+});
+
+app.post('/api/workspace/items/update', (req, res) => {
+    try {
+        workspaceConnector.updateById(req.body.id, JSON.parse(req.body.item))
+            .then((result) => {
+                res.send(result + " updated");
+            })
             .catch(error => res.status(500).send(error));
     } catch (err) {
         res.send("Error: " + err);

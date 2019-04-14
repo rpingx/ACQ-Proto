@@ -122,7 +122,7 @@ const getWorkItemById = (id) => {
             if (docs.length === 1) {
                 let workItem = docs[0];
                 delete workItem._id;
-                workItem.Status = 0;
+                workItem.Status = "0";
                 workItem.KeyContacts = [
                     {name: "Person McPerson", contact: "123-45-7890"},
                     {name: "Real O'Person", contact: "roper@corp.com"}
