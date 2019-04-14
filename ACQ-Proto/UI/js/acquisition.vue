@@ -64,7 +64,7 @@
                         </formElement>
                         <formElement>
                             <span slot="title">IPO year</span>
-                            <input slot="body" type="text" class="form-control"
+                            <input slot="body" type="number" class="form-control"
                                    placeholder="Enter IPO year"
                                    v-model="modalWorkItem.IPOYear">
                         </formElement>
@@ -81,20 +81,20 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
                                     </div>
-                                    <input type="text" class="form-control"
+                                    <input type="number" class="form-control"
                                            placeholder="Enter price"
                                            v-model="modalWorkItem.Price">
                                 </div>
                             </div>
                         </formElement>
                         <formElement>
-                            <span slot="title">Market Cap</span>
+                            <span slot="title">Market Cap (millions)</span>
                             <div slot="body" class="form-group">
                                 <div class="input-group ">
-                                    <input type="text" class="form-control"
+                                    <input type="number" class="form-control"
                                            v-model="modalWorkItem.MarketCap">
                                     <div class="input-group-append">
-                                        <span class="input-group-text">million</span>
+                                        <span class="input-group-text">M</span>
                                     </div>
                                 </div>
                             </div>
@@ -112,9 +112,11 @@
                         <formElement>
                         </formElement>
                         <div class="col-12">
-                            <pagination v-model="personPaginationIndex" count=21 countPer="4"></pagination>
+                            <pagination v-model="personPaginationIndex" :count="modalWorkItem.KeyContacts.length"
+                                        countPer=2></pagination>
                         </div>
-                        <div class="col-12" v-for="(keyContact, index) in modalWorkItem.KeyContacts">
+                        <div class="col-12" v-for="(keyContact, index) in modalWorkItem.KeyContacts"
+                             v-show="index >= personPaginationIndex.min && index <= personPaginationIndex.max ">
                             <div class="row">
                                 <formElement>
                                     <span slot="title">Person({{index+1}})'s name</span>
@@ -154,8 +156,9 @@
                 </fieldset>
             </form>
             <span slot="footer">
-                <button type="button" class="btn btn-primary" @click="saveWorkItem" autofocus>Save</button>
-                <button type="button" class="btn btn-outline-secondary" @click="closeWorkItem" autofocus>Close</button>
+                <button type="button" class="btn btn-success" @click="updateWorkItem" v-if="modalWorkItem._id">Update</button>
+                <button type="button" class="btn btn-warning" @click="updateWorkItem" v-if="modalWorkItem._id">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" @click="closeWorkItem">Close</button>
             </span>
         </modal>
     </div>
@@ -200,10 +203,10 @@
                             "name": "Real O'Person",
                             "contact": "roper@corp.com"
                         }],
-                    "_id": "ybn86XDhDbjQQOly"
+                    "_id": "AxjLTLAsAETYiYTh"
                 },
                 modalPersonConfirmVisible: [],
-                personPaginationIndex: {min: 0},
+                personPaginationIndex: {},
                 rawDataArr: []
             }
         },
@@ -235,6 +238,7 @@
             setWorkItemModal: function (obj) {
                 this.modalWorkItem = obj;
                 this.isWorkItemVisible = true;
+                this.personPaginationIndex = {};
             },
             closeNasdaq: function () {
                 this.isNasdaqVisible = false;
@@ -242,7 +246,10 @@
             closeWorkItem: function () {
                 this.isWorkItemVisible = false;
             },
-            saveWorkItem: function () {
+            updateWorkItem: function () {
+                console.log(JSON.stringify(this.modalWorkItem, null, 4));
+            },
+            deleteWorkItem: function () {
                 console.log(JSON.stringify(this.modalWorkItem, null, 4));
             },
             addModalPerson: function () {
