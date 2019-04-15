@@ -9,10 +9,3 @@
         </small>
     </div>
 </template>
-
-<!--<formElement>-->
-    <!--<span slot="title">Top</span>-->
-    <!--<input  slot="body" type="text" class="form-control"-->
-            <!--placeholder="Enter email">-->
-    <!--<span slot="subtext">Bot</span>-->
-<!--</formElement>-->
