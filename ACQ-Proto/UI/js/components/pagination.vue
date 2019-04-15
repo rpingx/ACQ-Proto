@@ -5,11 +5,12 @@
                 <a @click.prevent="shiftLeft" class="page-link"
                    href="#">&laquo;</a>
             </li>
-            <li :class="[index === activePage ? 'active' : '', 'page-item']"
+            <li :class="[index === activePage ? 'active' : '', 'page-item', 'text-center']"
                 v-for="(page, index) in totalPage"
-                v-show="index >= shownMin && index <= shownMax">
+                v-show="index >= shownMin && index <= shownMax"
+                style="min-width: 42px;max-width: 42px;">
                 <a @click.prevent="select(index)"
-                   class="page-link" href="#">{{page+1}}</a>
+                   class="page-link" href="#">{{displayText(index)}}</a>
             </li>
             <li :class="[isRightDisabled ? 'disabled' : '', 'page-item']">
                 <a @click.prevent="shiftRight" class="page-link" href="#">&raquo;</a>
@@ -117,6 +118,17 @@
             this.$nextTick(this.init);
         },
         methods: {
+            displayText: function (index) {
+                if (this.shownMin > 0 && index == this.shownMin) {
+                    return "...";
+                }
+
+                if (this.shownMax < this.absoluteMax && index == this.shownMax) {
+                    return "...";
+                }
+
+                return index + 1;
+            },
             init: function () {
                 if (!this.countPer) {
                     this.countPer = 10;
