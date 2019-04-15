@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-6 col-lg-4">
-        <div :class="classCreator(entry.Status)" @click="selectFunc(entry)">
+        <div :class="classCreator(entry.Status)" @click="selectFunc(entry)" style="cursor: pointer;">
             <div class="card-header text-truncate" :title="entry.Symbol + '-' + entry.Name">
                 {{entry.Symbol}} - {{entry.Name}}
             </div>
