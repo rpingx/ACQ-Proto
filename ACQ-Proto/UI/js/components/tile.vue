@@ -33,8 +33,6 @@
     </div>
 </template>
 
-{"Price":9.67,"MarketCap":47.16,"IPOYear":2019,"Sector":"Finance","Industry":"Banks","SummaryQuote":"https://www.nasdaq.com/symbol/bcow","Status":"4","KeyContacts":[{"name":"Person McPerson","contact":"123-45-7890"},{"name":"Real O'Person","contact":"roper@corp.com"}],"_id":"2oB47KmKyqp8L0gV"}
-
 <script>
     import statusService from "../services/status";
 
