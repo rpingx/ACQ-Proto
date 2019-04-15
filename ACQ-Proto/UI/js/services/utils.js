@@ -18,6 +18,21 @@ export default {
             return obj[field] === value;
         }
     },
+    propertyContainsIgnoreCase: function (field, value) {
+        return function (obj) {
+            return obj[field].toUpperCase().includes(value.toUpperCase());
+        }
+    },
+    propertyGTE: function (field, value) {
+        return function (obj) {
+            return obj[field] >= value;
+        }
+    },
+    propertyLTE: function (field, value) {
+        return function (obj) {
+            return obj[field] <= value;
+        }
+    },
     remove: function (field) {
         return function (obj) {
             obj[field] = undefined;

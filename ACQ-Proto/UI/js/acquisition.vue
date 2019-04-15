@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label class="control-label">Add work items:</label>
                         <div class="form-group">
-                            <div class="input-group mb-3 nowrap">
+                            <div class="input-group mb-3">
                                 <button @click="startNasdaq" type="button" class="btn btn-info">From NASDAQ</button>
                                 <button @click="addBlankWorkItem" type="button" class="btn btn-outline-info">From Blank
                                 </button>
@@ -34,9 +34,149 @@
                     </div>
                 </div>
 
+                <div class="col-lg-6 col-12">
+                    <div class="form-group">
+                        <label class="control-label">Filter:</label>
+                        <div class="form-group">
+                            <div class="input-group mb-3">
+                                <button @click="clearFilter" type="button" class="btn btn-outline-success">Clear
+                                </button>
+                                <button @click="isFilterDisplayed = !isFilterDisplayed" type="button"
+                                        class="btn btn-info">{{isFilterDisplayed ? 'Hide' : 'Display'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12" v-show="isFilterDisplayed">
+                    <div class="row bg-white">
+                        <formElement>
+                            <span slot="title">Name or symbol filter</span>
+                            <input slot="body" type="text" class="form-control"
+                                   placeholder="Enter partial text"
+                                   v-model="rawFilter.text"
+                                   @keydown="filterRaw">
+                        </formElement>
+
+
+                        <formElement>
+                            <span slot="title">Status filter</span>
+                            <div slot="body" class="form-group">
+                                <select class="form-control" v-model="rawFilter.status" @change="filterRaw">
+                                    <option v-for="option in statusOpt" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                        </formElement>
+
+                        <formElement>
+                            <span slot="title">Sector filter</span>
+                            <div slot="body" class="form-group">
+                                <select class="form-control" v-model="rawFilter.sector" @change="filterRaw">
+                                    <option v-for="option in UniqueSectorOpt" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                        </formElement>
+
+                        <formElement>
+                            <span slot="title">Industry filter</span>
+                            <div slot="body" class="form-group">
+                                <select class="form-control" v-model="rawFilter.industry" @change="filterRaw">
+                                    <option v-for="option in UniqueIndustryOpt" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                            </div>
+                        </formElement>
+
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">Price filter</span>
+                            <div slot="body" class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" class="form-control"
+                                           placeholder="Enter min Price"
+                                           v-model="rawFilter.priceMin"
+                                           @keydown="debouncer(validatePriceMinRaw)"
+                                           @change="debouncer(validatePriceMinRaw)">
+                                </div>
+                            </div>
+                        </formElement>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">&nbsp</span>
+                            <div slot="body" class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" class="form-control"
+                                           placeholder="Enter max Price"
+                                           v-model="rawFilter.priceMax"
+                                           @keydown="debouncer(validatePriceMaxRaw)"
+                                           @change="debouncer(validatePriceMaxRaw)">
+                                </div>
+                            </div>
+                        </formElement>
+
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">Market cap (millions) filter</span>
+                            <div slot="body" class="form-group">
+                                <div class="input-group">
+                                    <input type="number" class="form-control"
+                                           placeholder="Enter min market cap"
+                                           v-model="rawFilter.marketCapMin"
+                                           @keydown="debouncer(validateMarketCapMinRaw)"
+                                           @change="debouncer(validateMarketCapMinRaw)">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">M</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </formElement>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">&nbsp</span>
+                            <div slot="body" class="form-group">
+                                <div class="input-group">
+                                    <input type="number" class="form-control"
+                                           placeholder="Enter max market cap"
+                                           v-model="rawFilter.marketCapMax"
+                                           @keydown="debouncer(validateMarketCapMaxRaw)"
+                                           @change="debouncer(validateMarketCapMaxRaw)">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">M</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </formElement>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">IPO year filter</span>
+                            <input slot="body" type="number" class="form-control"
+                                   placeholder="Enter min IPO year"
+                                   v-model="rawFilter.ipoYearMin"
+                                   @keydown="debouncer(validateIPOMinRaw)"
+                                   @change="debouncer(validateIPOMinRaw)">
+                        </formElement>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">&nbsp</span>
+                            <input slot="body" type="number" class="form-control"
+                                   placeholder="Enter max IPO year"
+                                   v-model="rawFilter.ipoYearMax"
+                                   @keydown="debouncer(validateIPOMaxRaw)"
+                                   @change="debouncer(validateIPOMaxRaw)">
+                        </formElement>
+                    </div>
+                </div>
+
+
                 <div class="col-12">
                     <label class="control-label">Work items:</label>
-                    <tileView :selectFunc="setWorkItemModal" :objectArray="rawDataArr"/>
+                    <tileView :selectFunc="setWorkItemModal" :objectArray="filteredDataArr"/>
                 </div>
 
             </div>
@@ -193,7 +333,8 @@
                                     <div class="col-4 col-lg-4 col-xl-2 text-truncate" :title="entry.Industry">
                                         {{entry.Industry}}
                                     </div>
-                                    <div class="col-xl-2 d-none d-xl-block text-truncate" :title="'$' + entry.Price">
+                                    <div class="col-xl-2 d-none d-xl-block text-truncate"
+                                         :title="'$' + entry.Price">
                                         ${{entry.Price}}
                                     </div>
                                     <div class="col-xl-2 d-none d-xl-block text-truncate"
@@ -375,6 +516,24 @@
 
     import tileView from "./components/tileView.vue";
 
+    const compareExcludingNA = function (a, b) {
+        if (a === 'n/a') {
+            return -1;
+        }
+
+        if (b === 'n/a') {
+            return 1;
+        }
+        return a.localeCompare(b);
+    };
+
+    const ArrayToOptions = function (value) {
+        if (value === "n/a") {
+            return {text: "no filter", value: null};
+        }
+        return {text: value, value: value}
+    };
+
     export default {
         components: {
             modal: modal,
@@ -388,6 +547,7 @@
                 isNasdaqVisible: false,
                 debouncer: utils.getDebouncer(1200)("default"),
                 debouncerNasdaq: utils.getDebouncer(750)("Nasdaq"),
+                debouncerRaw: utils.getDebouncer(750)("Raw"),
                 NasdaqSectorOpt: [],
                 NasdaqIndustryOpt: [],
                 NasdaqFilter: {
@@ -424,7 +584,23 @@
                 modalPersonConfirmVisible: [],
                 deleteWorkItemConfirmVisible: false,
                 personPaginationIndex: {min: 0, max: 1},
-                rawDataArr: []
+                rawDataArr: [],
+                UniqueSectorOpt: [],
+                UniqueIndustryOpt: [],
+                rawFilter: {
+                    industry: null,
+                    sector: null,
+                    text: null,
+                    ipoYearMin: null,
+                    ipoYearMax: null,
+                    marketCapMin: null,
+                    marketCapMax: null,
+                    priceMin: null,
+                    priceMax: null,
+                    status: null
+                },
+                isFilterDisplayed: false,
+                filteredDataArr: []
             }
         },
         computed: {},
@@ -436,7 +612,8 @@
                 });
 
                 this.modalPersonConfirmVisible = visArr;
-            }
+            },
+            "rawDataArr": "filterData"
         },
         mounted: function () {
             var self = this;
@@ -449,13 +626,6 @@
                 nasdaqResources.getDistinctSector().then(function (res) {
                     self.NasdaqSectorOpt = res.map(ArrayToOptions);
                 });
-
-                const ArrayToOptions = function (value) {
-                    if (value === "n/a") {
-                        return {text: "no filter", value: null};
-                    }
-                    return {text: value, value: value}
-                };
             })
         },
         methods: {
@@ -536,8 +706,8 @@
                 var self = this;
                 workspaceResources.getAllItems()
                         .then(function (res) {
-                            self.rawDataArr = res;
-                            console.log(self.rawDataArr.length);
+                            self.rawDataArr = res
+                                    .sort(utils.compare("Symbol"));
                         });
             },
             addNasdaqWorkItem: function (id) {
@@ -624,6 +794,156 @@
             toggleModalPersonConfirmation: function (index) {
                 this.modalPersonConfirmVisible[index] = !this.modalPersonConfirmVisible[index];
                 this.$forceUpdate();
+            },
+            validateIPOMinRaw: function () {
+                if (this.rawFilter.ipoYearMin != null && this.rawFilter.ipoYearMin.length > 0 &&
+                        this.rawFilter.ipoYearMax != null && this.rawFilter.ipoYearMax.length > 0 &&
+                        Number(this.rawFilter.ipoYearMin) > Number(this.rawFilter.ipoYearMax)) {
+                    this.rawFilter.ipoYearMax = this.rawFilter.ipoYearMin;
+                }
+                this.filterRaw();
+            },
+            validateIPOMaxRaw: function () {
+                if (this.rawFilter.ipoYearMin != null && this.rawFilter.ipoYearMin.length > 0 &&
+                        this.rawFilter.ipoYearMax != null && this.rawFilter.ipoYearMax.length > 0 &&
+                        Number(this.rawFilter.ipoYearMin) > Number(this.rawFilter.ipoYearMax)) {
+                    this.rawFilter.ipoYearMin = this.rawFilter.ipoYearMax;
+                }
+                this.filterRaw();
+            },
+            validatePriceMinRaw: function () {
+                if (this.rawFilter.priceMin != null && this.rawFilter.priceMin.length > 0 &&
+                        this.rawFilter.priceMax != null && this.rawFilter.priceMax.length > 0 &&
+                        Number(this.rawFilter.priceMin) > Number(this.rawFilter.priceMax)) {
+                    this.rawFilter.priceMax = this.rawFilter.priceMin;
+                }
+                this.filterRaw();
+            },
+            validatePriceMaxRaw: function () {
+                if (this.rawFilter.priceMin != null && this.rawFilter.priceMin.length > 0 &&
+                        this.rawFilter.priceMax != null && this.rawFilter.priceMax.length > 0 &&
+                        Number(this.rawFilter.priceMin) > Number(this.rawFilter.priceMax)) {
+                    this.rawFilter.priceMin = this.rawFilter.priceMax;
+                }
+                this.filterRaw();
+            },
+            validateMarketCapMinRaw: function () {
+                if (this.rawFilter.marketCapMin != null && this.rawFilter.marketCapMin.length > 0 &&
+                        this.rawFilter.marketCapMax != null && this.rawFilter.marketCapMax.length > 0 &&
+                        Number(this.rawFilter.marketCapMin) > Number(this.rawFilter.marketCapMax)) {
+                    this.rawFilter.marketCapMax = this.rawFilter.marketCapMin;
+                }
+                this.filterRaw();
+            },
+            validateMarketCapMaxRaw: function () {
+                if (this.rawFilter.marketCapMin != null && this.rawFilter.marketCapMin.length > 0 &&
+                        this.rawFilter.marketCapMax != null && this.rawFilter.marketCapMax.length > 0 &&
+                        Number(this.rawFilter.marketCapMin) > Number(this.rawFilter.marketCapMax)) {
+                    this.rawFilter.marketCapMin = this.rawFilter.marketCapMax;
+                }
+                this.filterRaw();
+            },
+            filterData: function () {
+                this.UniqueSectorOpt = this.rawDataArr
+                        .map(utils.mapTo("Sector"))
+                        .filter(utils.unique)
+                        .sort(compareExcludingNA)
+                        .map(ArrayToOptions);
+
+                this.UniqueIndustryOpt = this.rawDataArr
+                        .map(utils.mapTo("Industry"))
+                        .filter(utils.unique)
+                        .sort(compareExcludingNA)
+                        .map(ArrayToOptions);
+
+                this.filterRaw();
+            },
+            clearFilter: function () {
+                this.rawFilter = {
+                    industry: null,
+                    sector: null,
+                    text: null,
+                    ipoYearMin: null,
+                    ipoYearMax: null,
+                    marketCapMin: null,
+                    marketCapMax: null,
+                    priceMin: null,
+                    priceMax: null,
+                    status: null
+                };
+
+                this.filterRaw();
+            },
+            filterRaw: function () {
+                var self = this;
+                this.debouncerRaw(function () {
+                    let shallowCopy = Object.assign({}, self.rawFilter);
+                    self.numberValidate(shallowCopy, "ipoYearMin");
+                    self.numberValidate(shallowCopy, "ipoYearMax");
+                    self.numberValidate(shallowCopy, "priceMin");
+                    self.numberValidate(shallowCopy, "priceMax");
+                    self.numberValidate(shallowCopy, "marketCapMin");
+                    self.numberValidate(shallowCopy, "marketCapMax");
+
+                    let holderArr = self.rawDataArr;
+
+                    if (shallowCopy.industry) {
+                        holderArr = holderArr
+                                .filter(utils.propertyEquals("Industry", shallowCopy.industry));
+                    }
+
+                    if (shallowCopy.sector) {
+                        holderArr = holderArr
+                                .filter(utils.propertyEquals("Sector", shallowCopy.sector));
+                    }
+
+                    if (shallowCopy.status) {
+                        holderArr = holderArr
+                                .filter(utils.propertyEquals("Status", shallowCopy.status));
+                    }
+
+                    if (shallowCopy.ipoYearMin) {
+                        holderArr = holderArr
+                                .filter(utils.propertyGTE("IPOYear", shallowCopy.ipoYearMin));
+                    }
+
+                    if (shallowCopy.ipoYearMax) {
+                        holderArr = holderArr
+                                .filter(utils.propertyLTE("IPOYear", shallowCopy.ipoYearMax));
+                    }
+
+                    if (shallowCopy.marketCapMin) {
+                        holderArr = holderArr
+                                .filter(utils.propertyGTE("MarketCap", shallowCopy.marketCapMin));
+                    }
+
+                    if (shallowCopy.marketCapMax) {
+                        holderArr = holderArr
+                                .filter(utils.propertyLTE("MarketCap", shallowCopy.marketCapMax));
+                    }
+
+                    if (shallowCopy.priceMin) {
+                        holderArr = holderArr
+                                .filter(utils.propertyGTE("Price", shallowCopy.priceMin));
+                    }
+
+                    if (shallowCopy.priceMax) {
+                        holderArr = holderArr
+                                .filter(utils.propertyLTE("Price", shallowCopy.priceMax));
+                    }
+
+                    if (shallowCopy.text) {
+                        var symbol = holderArr
+                                .filter(utils.propertyContainsIgnoreCase("Symbol", shallowCopy.text));
+                        holderArr = holderArr
+                                .filter(utils.propertyContainsIgnoreCase("Name", shallowCopy.text));
+
+                        holderArr = holderArr.concat(symbol)
+                                .filter(utils.unique);
+                    }
+
+                    self.filteredDataArr = holderArr;
+                });
             }
         }
     };
