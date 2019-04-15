@@ -26,6 +26,13 @@
             <p>
                 Downside is it looks a bit familiar since a lot of apps use Bootstrap, but CSS isn't really the area that I want to get fancy with.
             </p>
+            <hr class="my-4">
+            <p>
+                You might be wondering why I am using big arrow notation in my node.js code but not my vue.js code.
+            </p>
+            <p>
+                I think my IDE is too old. Preventing me from getting a newer vue.js plugin that doesn't freak out about big arrow notation in *.vue files.
+            </p>
         </div>
     </div>
 </template>

@@ -5,7 +5,9 @@
                 <a @click.prevent="shiftLeft" class="page-link"
                    href="#">&laquo;</a>
             </li>
-            <li :class="[index === activePage ? 'active' : '', 'page-item']" v-for="(page, index) in totalPage">
+            <li :class="[index === activePage ? 'active' : '', 'page-item']"
+                v-for="(page, index) in totalPage"
+                v-show="index >= shownMin && index <= shownMax">
                 <a @click.prevent="select(index)"
                    class="page-link" href="#">{{page+1}}</a>
             </li>
@@ -21,16 +23,55 @@
     export default {
         props: ['value', 'count', 'countPer'],
         data: function () {
-            return {}
+            return {
+                idealCap: 5
+            }
         },
         computed: {
+            absoluteMax: function () {
+                return Number(Math.ceil(this.count / this.countPer));
+            },
             totalPage: function () {
                 var tempTotal = [];
-                for (let ind = 0; ind < Math.ceil(this.count / this.countPer); ind++) {
+                for (let ind = 0; ind < this.absoluteMax; ind++) {
                     tempTotal.push(ind);
                 }
 
                 return tempTotal;
+            },
+            shownMin: function () {
+                if (this.totalPage.length > 0) {
+                    let max = this.totalPage.length - 1;
+
+                    let highDelta = max - Number(this.activePage);
+                    let lowDelta = Number(this.activePage);
+
+                    if (highDelta < lowDelta && highDelta < this.idealCap) {
+                        lowDelta = 10 - highDelta;
+                    } else {
+                        lowDelta = this.idealCap;
+                    }
+
+                    return this.activePage - lowDelta;
+                }
+                return 0;
+            },
+            shownMax: function () {
+                if (this.totalPage.length > 0) {
+                    let max = this.totalPage.length - 1;
+
+                    let highDelta = max - Number(this.activePage);
+                    let lowDelta = Number(this.activePage);
+
+                    if (lowDelta < highDelta && lowDelta < this.idealCap) {
+                        highDelta = 10 - lowDelta;
+                    } else {
+                        highDelta = this.idealCap;
+                    }
+
+                    return this.activePage + highDelta;
+                }
+                return Number(this.absoluteMax);
             },
             isLeftDisabled: function () {
                 if (this.value) {

@@ -1,6 +1,6 @@
 <template>
     <div :style="styleObj">
-        <div class="modal-dialog">
+        <div class="modal-dialog mw-100 w-75">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
