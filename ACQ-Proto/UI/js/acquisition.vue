@@ -34,14 +34,15 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    Zone
+                <div class="col-12">
+                    <label class="control-label">Work items:</label>
+                    <tileView :selectFunc="setWorkItemModal" :objectArray="rawDataArr"/>
                 </div>
 
             </div>
         </div>
 
-        <modal v-show="isNasdaqVisible" :close="closeNasdaq">
+        <modal v-if="isNasdaqVisible" :close="closeNasdaq">
             <span slot="title">NASDAQ Query</span>
             <form slot="body">
                 <fieldset class="container">
@@ -74,23 +75,6 @@
                                     </option>
                                 </select>
                             </div>
-                        </formElement>
-
-                        <formElement class="d-none d-md-block">
-                            <span slot="title">IPO year filter</span>
-                            <input slot="body" type="number" class="form-control"
-                                   placeholder="Enter min IPO year"
-                                   v-model="NasdaqFilter.ipoYearMin"
-                                   @keydown="debouncer(validateIPOMin)"
-                                   @change="debouncer(validateIPOMin)">
-                        </formElement>
-                        <formElement class="d-none d-md-block">
-                            <span slot="title">&nbsp</span>
-                            <input slot="body" type="number" class="form-control"
-                                   placeholder="Enter max IPO year"
-                                   v-model="NasdaqFilter.ipoYearMax"
-                                   @keydown="debouncer(validateIPOMax)"
-                                   @change="debouncer(validateIPOMax)">
                         </formElement>
 
                         <formElement class="d-none d-md-block">
@@ -154,11 +138,27 @@
                                 </div>
                             </div>
                         </formElement>
-                        <div class="col-12" v-show="NasdaqResults.length > 0">
-                            <pagination v-model="NasdaqPaginationIndex" :count="NasdaqResults.length"
-                                        countPer=10></pagination>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">IPO year filter</span>
+                            <input slot="body" type="number" class="form-control"
+                                   placeholder="Enter min IPO year"
+                                   v-model="NasdaqFilter.ipoYearMin"
+                                   @keydown="debouncer(validateIPOMin)"
+                                   @change="debouncer(validateIPOMin)">
+                        </formElement>
+                        <formElement class="d-none d-md-block">
+                            <span slot="title">&nbsp</span>
+                            <input slot="body" type="number" class="form-control"
+                                   placeholder="Enter max IPO year"
+                                   v-model="NasdaqFilter.ipoYearMax"
+                                   @keydown="debouncer(validateIPOMax)"
+                                   @change="debouncer(validateIPOMax)">
+                        </formElement>
+
+                        <div class="col-12" v-if="NasdaqResults.length > 0">
+                            <pagination v-model="NasdaqPaginationIndex" countPer=10 :count="NasdaqResults.length"/>
                         </div>
-                        <div class="col-12" v-show="NasdaqResults.length > 0">
+                        <div class="col-12" v-if="NasdaqResults.length > 0">
                             <div class="row">
                                 <div class="col-4 col-lg-4 col-xl-2 text-nowrap font-weight-bold text-white bg-dark">
                                     Symbol\Name
@@ -169,14 +169,14 @@
                                 <div class="col-4 col-lg-4 col-xl-2 text-nowrap font-weight-bold text-white bg-dark">
                                     Industry
                                 </div>
-                                <div class="col-xl-1 d-none d-xl-block text-nowrap font-weight-bold text-white bg-dark">
-                                    IPO
-                                </div>
                                 <div class="col-xl-2 d-none d-xl-block text-nowrap font-weight-bold text-white bg-dark">
                                     Price
                                 </div>
                                 <div class="col-xl-2 d-none d-xl-block text-nowrap font-weight-bold text-white bg-dark">
                                     Market Cap
+                                </div>
+                                <div class="col-xl-1 d-none d-xl-block text-nowrap font-weight-bold text-white bg-dark">
+                                    IPO
                                 </div>
                                 <div class="col-1 col-lg-1 col-xl-1 text-nowrap font-weight-bold text-white bg-dark">
                                     Add
@@ -193,15 +193,15 @@
                                     <div class="col-4 col-lg-4 col-xl-2 text-truncate" :title="entry.Industry">
                                         {{entry.Industry}}
                                     </div>
-                                    <div class="col-xl-1 d-none d-xl-block text-truncate" :title="entry.IPOYear">
-                                        {{entry.IPOYear}}
-                                    </div>
                                     <div class="col-xl-2 d-none d-xl-block text-truncate" :title="'$' + entry.Price">
                                         ${{entry.Price}}
                                     </div>
                                     <div class="col-xl-2 d-none d-xl-block text-truncate"
                                          :title="entry.MarketCap + 'M'">
                                         {{entry.MarketCap}}M
+                                    </div>
+                                    <div class="col-xl-1 d-none d-xl-block text-truncate" :title="entry.IPOYear">
+                                        {{entry.IPOYear}}
                                     </div>
                                     <div class="col-1 col-lg-1 col-xl-1 text-truncate">
                                         <button type="button" @click="addNasdaqWorkItem(entry._id);"
@@ -219,7 +219,7 @@
             </span>
         </modal>
 
-        <modal v-show="isWorkItemVisible" :close="closeWorkItem">
+        <modal v-if="isWorkItemVisible" :close="closeWorkItem">
             <span slot="title">Work Item Details</span>
             <form slot="body">
                 <fieldset class="container">
@@ -293,8 +293,8 @@
                         <formElement>
                         </formElement>
                         <div class="col-12 d-none d-md-block">
-                            <pagination v-model="personPaginationIndex" :count="modalWorkItem.KeyContacts.length"
-                                        countPer=2></pagination>
+                            <pagination v-model="personPaginationIndex" countPer=2
+                                        :count="modalWorkItem.KeyContacts.length"/>
                         </div>
                         <formElement class="col-md-12 col-12 d-none d-md-block">
                             <span slot="title">
@@ -373,11 +373,14 @@
     import formElement from "./components/formElement.vue";
     import pagination from "./components/pagination.vue";
 
+    import tileView from "./components/tileView.vue";
+
     export default {
         components: {
             modal: modal,
             formElement: formElement,
-            pagination: pagination
+            pagination: pagination,
+            tileView: tileView
         },
         data() {
             return {

@@ -9,6 +9,14 @@ const statusMap = {
     4: 'Declined'
 };
 
+const statusStyleMap = {
+    0: 'secondary',
+    1: 'warning',
+    2: 'info',
+    3: 'success',
+    4: 'danger'
+};
+
 var reverseMapFromMap = (map)=> {
     return Object.keys(map).reduce(function (accum, ele) {
         accum[map[ele]] = ele;
@@ -23,6 +31,9 @@ export default {
     reverse: reverseMap,
     getText: (val) => {
         return statusMap[val];
+    },
+    getStyle: (val) => {
+        return statusStyleMap[val];
     },
     getValue: (text) => {
         return reverseMap[text];
