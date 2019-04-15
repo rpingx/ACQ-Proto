@@ -175,8 +175,26 @@
 
 
                 <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label">Sort by:</label>
+                        <div class="form-group">
+                            <div class="btn-group">
+                                <select class="form-control" v-model="sortActive" @change="sortData">
+                                    <option v-for="option in sortArrayDisplay" :value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                                </select>
+                                <button @click="isSortAscending=!isSortAscending;" type="button"
+                                        class="btn btn-success">{{isSortAscending ? "Ascending":"Descending"}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
                     <label class="control-label">Work items:</label>
-                    <component :is="viewMode" :selectFunc="setWorkItemModal" :objectArray="filteredDataArr"/>
+                    <component :is="viewMode" :selectFunc="setWorkItemModal" :objectArray="sortedDataArr"/>
                 </div>
 
             </div>
@@ -602,7 +620,53 @@
                     status: null
                 },
                 isFilterDisplayed: false,
-                filteredDataArr: []
+                filteredDataArr: [],
+                sortActive: "Symbol",
+                sortArrayDisplay: [
+                    {
+                        text: "Symbol",
+                        value: "Symbol"
+                    },
+                    {
+                        text: "Name",
+                        value: "Name"
+                    }, {
+                        text: "Sector",
+                        value: "Sector"
+                    },
+                    {
+                        text: "Industry",
+                        value: "Industry"
+                    },
+                    {
+                        text: "IPO Year",
+                        value: "IPOYear"
+                    },
+                    {
+                        text: "Price",
+                        value: "Price"
+                    },
+                    {
+                        text: "Market Cap",
+                        value: "MarketCap"
+                    },
+                    {
+                        text: "Status",
+                        value: "Status"
+                    }
+                ],
+                sortArray: [
+                    "Symbol",
+                    "Name",
+                    "Sector",
+                    "Industry",
+                    "IPOYear",
+                    "Price",
+                    "MarketCap",
+                    "Status"
+                ],
+                sortedDataArr: [],
+                isSortAscending: true
             }
         },
         computed: {},
@@ -615,7 +679,9 @@
 
                 this.modalPersonConfirmVisible = visArr;
             },
-            "rawDataArr": "filterData"
+            "rawDataArr": "filterData",
+            "filteredDataArr": "sortData",
+            "isSortAscending": "sortData"
         },
         mounted: function () {
             var self = this;
@@ -708,8 +774,7 @@
                 var self = this;
                 workspaceResources.getAllItems()
                         .then(function (res) {
-                            self.rawDataArr = res
-                                    .sort(utils.compare("Symbol"));
+                            self.rawDataArr = res;
                         });
             },
             addNasdaqWorkItem: function (id) {
@@ -946,6 +1011,16 @@
 
                     self.filteredDataArr = holderArr;
                 });
+            },
+            sortData: function () {
+                var holderArr = this.filteredDataArr.slice(0);
+
+                holderArr = holderArr.sort(utils.compareSafe(this.sortActive));
+
+                if (!this.isSortAscending) {
+                    holderArr.reverse();
+                }
+                this.sortedDataArr = holderArr;
             }
         }
     };

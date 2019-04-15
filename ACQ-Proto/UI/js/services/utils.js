@@ -3,6 +3,10 @@
  */
 import deepEquals from 'fast-deep-equal';
 
+const IsNumeric = (val)=> {
+    return Number(parseFloat(val)) == val;
+};
+
 export default {
     // filter
     unique: function (value, index, arr) {
@@ -54,6 +58,15 @@ export default {
     compare: function (field) {
         return function (a, b) {
             return a[field].localeCompare(b[field]);
+        }
+    },
+    compareSafe: function (field) {
+        return function (a, b) {
+            if (IsNumeric(a[field]) && IsNumeric(b[field])) {
+                return Number(a[field]) - Number(b[field]);
+            }
+
+            return String(a[field]).localeCompare(String(b[field]));
         }
     },
     // reduce
