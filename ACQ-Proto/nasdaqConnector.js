@@ -34,11 +34,11 @@ const parseMarketCap = (origCap) => {
 
 const compareExcludingNA = (a, b) => {
     if (a === 'n/a') {
-        return 1;
+        return -1;
     }
 
     if (b === 'n/a') {
-        return -1;
+        return 1;
     }
     return a.localeCompare(b);
 };
@@ -83,6 +83,7 @@ nasdaqDB.count({}, (err, count) => {
 
         distinctSector = Object.keys(sectorAccum)
             .sort(compareExcludingNA);
+
         distinctIndustry = Object.keys(industryAccum)
             .sort(compareExcludingNA);
 
@@ -133,6 +134,7 @@ const getWorkItemById = (id) => {
         });
     });
 };
+
 const queryByOthers = (filterObj) => {
     filterObj = JSON.parse(filterObj);
     let filter = {$and: []};
