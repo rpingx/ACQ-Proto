@@ -176,7 +176,7 @@
 
                 <div class="col-12">
                     <label class="control-label">Work items:</label>
-                    <tileView :selectFunc="setWorkItemModal" :objectArray="filteredDataArr"/>
+                    <component :is="viewMode" :selectFunc="setWorkItemModal" :objectArray="filteredDataArr"/>
                 </div>
 
             </div>
@@ -458,7 +458,7 @@
                                            placeholder="Enter Contact Name"
                                            v-model="keyContact.contact">
                                 </formElement>
-                                <formElement class="col-md-12 col-12 d-none d-md-block">>
+                                <formElement class="col-md-12 col-12 d-none d-md-block">
                                     <span slot="title">
                                         <span v-show="!modalPersonConfirmVisible[index]">
                                             <a @click.prevent="toggleModalPersonConfirmation(index)" href="#"
@@ -515,6 +515,7 @@
     import pagination from "./components/pagination.vue";
 
     import tileView from "./components/tileView.vue";
+    import rowView from "./components/rowView.vue";
 
     const compareExcludingNA = function (a, b) {
         if (a === 'n/a') {
@@ -539,7 +540,8 @@
             modal: modal,
             formElement: formElement,
             pagination: pagination,
-            tileView: tileView
+            tile: tileView,
+            row: rowView
         },
         data() {
             return {
