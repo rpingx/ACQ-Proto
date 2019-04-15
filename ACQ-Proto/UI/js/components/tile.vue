@@ -10,8 +10,12 @@
                     <div class="col-7 text-truncate" :title="entry.Sector">{{entry.Sector}}</div>
                     <div class="col-5 font-weight-bold text-dark">Industry:</div>
                     <div class="col-7 text-truncate" :title="entry.Industry">{{entry.Industry}}</div>
-                    <div class="col-5 font-weight-bold text-dark">Price:</div>
-                    <div class="col-7 text-truncate" :title="'$' + entry.Price">${{entry.Price}}</div>
+                    <div class="col-5 font-weight-bold text-dark"
+                         v-show="entry.Price && entry.Price != 'n\a' && entry.Price != 'n/a'">Price:
+                    </div>
+                    <div class="col-7 text-truncate" :title="'$' + entry.Price"
+                         v-show="entry.Price && entry.Price != 'n\a' && entry.Price != 'n/a'">${{entry.Price}}
+                    </div>
                     <div class="col-5 font-weight-bold text-dark"
                          v-show="entry.MarketCap && entry.MarketCap != 'n\a' && entry.MarketCap != 'n/a'">M. Cap:
                     </div>
